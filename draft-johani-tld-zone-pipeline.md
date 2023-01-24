@@ -1,7 +1,7 @@
 ---
-title: Generalized DNS Notifications
-abbrev: Generalized Notifications
-docname: draft-thomassen-dnsop-generalized-dns-notify-latest
+title: Requirements On a TLD Zone Verification and Signing Pipeline
+abbrev: TLD Zone Pipeline Requirements
+docname: draft-johani-tld-zone-pipeline-latest
 date: {DATE}
 category: std
 
@@ -20,10 +20,10 @@ author:
     organization: The Swedish Internet Foundation
     email: johan.stenstam@internetstiftelsen.se
  -
-    ins: P. Thomassen
-    name: Peter Thomassen
-    org: deSEC, Secure Systems Engineering
-    email: peter@desec.io
+    ins: J. Schlyter
+    name: Jakob Schlyter
+    org: Kirei
+    email: jakob@kirei.se
 
 normative:
 
@@ -31,26 +31,33 @@ informative:
 
 --- abstract
 
-Changes in CDS/CDNSKEY, CSYNC, and other records related to delegation
-maintenance are usually detected through scheduled scans run by the
-consuming party (e.g. top-level domain registry), incurring an
-uncomfortable trade-off between scanning cost and update latency.
+Today most TLD registries publish DNSSEC signed zones. This typically
+leads to a zone production "pipeline" that consists of several steps,
+including generation of the unsigned zone, signing of the zone and
+various types of verifications that the zone is correct before
+publication.
 
-A similar problem exists when scheduling zone transfers, and has been
-solved using the well-known DNS NOTIFY mechanism ({{!RFC1996}}).
-This mechanism enables a primary nameserver to proactively inform
-secondaries about zone changes, allowing the secondary to initiate an
-ad-hoc transfer independently of when the next SOA check would be due.
+In some cases, including the .SE Registry, the zone pipeline was not
+the result of a clear requirements process, nor was it the result of a
+concious design and implementation. Rather, it was the result of
+combining various tools in a mostly ad-hoc way that achieved the goal
+of moving the zone via signing and verifications towards publication.
 
-This document extends the use of DNS NOTIFY beyond conventional zone
-transfer hints, bringing the benefits of ad-hoc notifications to DNS
-delegation maintenance in general.
-Use cases include DNSSEC key rollovers hints via NOTIFY(CDS) and
-NOTIFY(DNSKEY), and quicker changes to a delegation's NS record set
-via NOTIFY(CSYNC).
+When a critical part of the operation of a TLD registry is the result
+of an ad-hoc process there are likely to be hidden risks. That was the
+case for the .SE registry, which had a serious incident in February
+2022. Because of that incident, .SE decided to re-evaluate the
+requirements on the zone pipeline and then create a more robust
+implementation from scratch.
+
+This document aims to describe the requirements that the .SE Registry
+choose in preparation for the implementation of the new zone pipeline.
+These requirements are meant to work as a guide for understanding the
+actual implementation, which is intended to be released as open
+source.
 
 TO BE REMOVED: This document is being collaborated on in Github at:
-[https://github.com/peterthomassen/draft-thomassen-dnsop-generalized-dns-notify](https://github.com/peterthomassen/draft-thomassen-dnsop-generalized-dns-notify).
+[https://github.com/johanix/draft-johani-tld-zone-pipeline](https://github.com/johanix/draft-johani-tld-zone-pipeline).
 The most recent working version of the document, open issues, etc. should all be
 available there.  The authors (gratefully) accept pull requests.
 
@@ -62,8 +69,8 @@ This document introduces a generalization of the DNS NOTIFY mechanism
 described in {{!RFC1996}}.
 
 Traditional DNS notifications, which are here referred to as
-”NOTIFY(SOA)”, are sent from a primary server to a secondary server to
-minimize the latter’s convergence time to a new version of the
+"NOTIFY(SOA)", are sent from a primary server to a secondary server to
+minimize the latter's convergence time to a new version of the
 zone. This mechanism successfully addresses a significant inefficiency
 in the original protocol.
 
@@ -109,8 +116,8 @@ to be deployed in a growing number of TLD registries. Because of the
 large number of child delegations, scanning for CDS and CSYNC records
 is rather slow (as in infrequent).
 
-Another use case is for so-called “multi-signer” setups where there
-are multiple, semi-independent, “signers” that each sign the same
+Another use case is for so-called "multi-signer" setups where there
+are multiple, semi-independent, "signers" that each sign the same
 zone, but with individual sets of keys. One requirement for
 multi-signer setups to work is the ability to insert additional
 DNSKEY records in each signer’s version of the zone. This is not the
