@@ -1,12 +1,23 @@
-# Requirements on a TLD Zone Verification and Signing Pipeline
+# Requirements On a TLD Zone Verification and Signing Pipeline
 
-## draft-tld-zone-pipeline
+This is the working area for the individual Internet-Draft, "Requirements On a TLD Zone Verification and Signing Pipeline".
 
-* [Editor's Copy](https://johanix.github.io/draft-tld-zone-pipeline/#go.draft-tld-zone-pipeline-latest.html)
-* [Individual Draft](https://datatracker.ietf.org/doc/draft-tld-zone-pipeline/)
-* [Compare Editor's Copy to Individual Draft](https://johanix.github.io/dns-alt-svc/#go.draft-tld-zone-pipeline-latest.diff)
+* [Editor's Copy](https://johanix.github.io/draft-johani-tld-zone-pipeline/#go.draft-johani-tld-zone-pipeline.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-johani-tld-zone-pipeline)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-johani-tld-zone-pipeline)
+* [Compare Editor's Copy to Individual Draft](https://johanix.github.io/draft-johani-tld-zone-pipeline/#go.draft-johani-tld-zone-pipeline.diff)
 
-## Building the Draft
+
+## Contributing
+
+See the
+[guidelines for contributions](https://github.com/johanix/draft-johani-tld-zone-pipeline/blob/main/CONTRIBUTING.md).
+
+Contributions can be made by creating pull requests.
+The GitHub interface supports creating pull requests using the Edit (✏) button.
+
+
+## Command Line Usage
 
 Formatted text and HTML versions of the draft can be built using `make`.
 
@@ -14,5 +25,6 @@ Formatted text and HTML versions of the draft can be built using `make`.
 $ make
 ```
 
-This requires that you have the necessary software installed.  See
-[the instructions](https://github.com/martinthomson/i-d-template/blob/master/doc/SETUP.md).
+Command line usage requires that you have the necessary software installed.  See
+[the instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md).
+
