@@ -1,5 +1,5 @@
 ---
-title: TLD Zone Pipeline: Requirements And Design Principles
+title: "TLD Zone Pipeline: Requirements And Design Principles"
 abbrev: TLD Zone Pipeline Requirements
 docname: draft-johani-tld-zone-pipeline-latest
 date: {DATE}
@@ -89,7 +89,7 @@ choose in preparation for the implementation of the new zone pipeline.
 These requirements are meant to work as a guide for understanding the
 actual implementation, which is intended to be released as open
 source.
- 
+
 ## Requirements Notation
 
 The key words "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL
@@ -101,7 +101,7 @@ when, they appear in all capitals, as shown here.
 
 This document describes the requirements for zone production (also
 called the “zone pipeline”) that a TLD Registry may have. It is
-developed for the needs of the .SE and .NU TLD Registries, but the 
+developed for the needs of the .SE and .NU TLD Registries, but the
 conclusions are intended to be generally applicable.
 
 The zone pipeline is the series of steps that an unsigned DNS zone
@@ -220,7 +220,7 @@ are subject to local policy.
 
 ## Examples of ingress verification checks:
 
-* Check that the zone data is complete. 
+* Check that the zone data is complete.
 
 * Check that delegation information for the zone itself is correct.
 
@@ -256,7 +256,7 @@ from upstream (i.e. from Registry via Ingress Verification).
 ## Key management
 
 The following requirements apply to the management of cryptographic
-keys for signing zone data: 
+keys for signing zone data:
 
 * The key material must be stored and used
   in an HSM that meets the security requirements set by the CISO.
@@ -275,7 +275,7 @@ keys for signing zone data:
 * Changing the KSK may only be completed if the DS record in the
   parent zone is updated.
 
-* Replacement of ZSK must be done automatically. 
+* Replacement of ZSK must be done automatically.
 
 ## Zone signing
 
