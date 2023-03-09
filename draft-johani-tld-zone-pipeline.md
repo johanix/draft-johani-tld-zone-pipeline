@@ -31,30 +31,24 @@ informative:
 
 --- abstract
 
-Today most TLD registries publish DNSSEC signed zones. This typically
-leads to a zone production "pipeline" that consists of several steps,
-including generation of the unsigned zone, signing of the zone and
-various types of verifications that the zone is correct before
-publication.
+Today most TLD registries publish DNSSEC signed zones. The sequence of steps
+from generating the unsigned zone, via DNSSEC signing and various types of
+verification is referred to as the "zone pipeline".
 
-In some cases, including the .SE Registry, the zone pipeline was not
-the result of a clear requirements process, nor was it the result of a
-concious design and implementation. Rather, it was the result of
-combining various tools in a mostly ad-hoc way that achieved the goal
-of moving the zone via signing and verifications towards publication.
+The robustness and correctness of the zone pipeline is of crucial
+importance and the zone pipeline is one of the most critical parts of
+the operations of a TLD registry.
 
-When a critical part of the operation of a TLD registry is the result
-of an ad-hoc process there are likely to be hidden risks. That was the
-case for the .SE registry, which had a serious incident in February
-2022. Because of that incident, .SE decided to re-evaluate the
-requirements on the zone pipeline and then create a more robust
-implementation from scratch.
+After a serious incident in 2022, the .SE Registry decided to re-evaluate the
+requirements on the zone pipeline. This has led to several new design
+choices and a decision to create a more robust implementation from scratch.
 
-This document aims to describe the requirements that the .SE Registry
-choose in preparation for the implementation of the new zone pipeline.
-These requirements are meant to work as a guide for understanding the
-actual implementation, which is intended to be released as open
-source.
+The goal of this document is to describe the requirements that the
+.SE Registry choose in preparation for the implementation of the new zone
+pipeline. The document also describes some of the design consequences that
+follow from the requirements. Hence this document is intended to work as a
+guide for understanding the actual implementation, which is planned to be
+released as open source.
 
 TO BE REMOVED: This document is being collaborated on in Github at:
 [https://github.com/johanix/draft-johani-tld-zone-pipeline](https://github.com/johanix/draft-johani-tld-zone-pipeline).
@@ -69,7 +63,7 @@ Today most TLD registries publish DNSSEC signed zones. This typically
 leads to a zone production "pipeline" that consists of several steps,
 including generation of the unsigned zone, signing of the zone and
 various types of verifications that the zone is correct before
-publication.
+publication on the Internet.
 
 In some cases, including the .SE Registry, the zone pipeline was not
 the result of a clear requirements process, nor was it the result of a
@@ -84,30 +78,19 @@ case for the .SE registry, which had a serious incident in February
 requirements on the zone pipeline and then create a more robust
 implementation from scratch.
 
-This document aims to describe the requirements that the .SE Registry
-choose in preparation for the implementation of the new zone pipeline.
-These requirements are meant to work as a guide for understanding the
-actual implementation, which is intended to be released as open
-source.
-
-## Requirements Notation
-
-The key words "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL
-NOT**", "**SHOULD**", "**SHOULD NOT**", "**RECOMMENDED**", "**NOT
-RECOMMENDED**", "**MAY**", and "**OPTIONAL**" in this document are to be
-interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only
-when, they appear in all capitals, as shown here.
-
-
-This document describes the requirements for zone production (also
-called the “zone pipeline”) that a TLD Registry may have. It is
+This document aims to describe the requirements for zone production
+(also known as "zone pipeline") that the .SE Registry choose in
+preparation for the implementation of the new zone pipeline. It is
 developed for the needs of the .SE and .NU TLD Registries, but the
 conclusions are intended to be generally applicable.
 
-The zone pipeline is the series of steps that an unsigned DNS zone
-needs to pass through before it is accepted, DNSSEC signed and
-published on the Internet. The document also describes consequences of
-these requirements and how that has guided the resulting design.
+## Requirements Notation
+
+The key words "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**",
+"**SHALL NOT**", "**SHOULD**", "**SHOULD NOT**", "**RECOMMENDED**",
+"**NOT RECOMMENDED**", "**MAY**", and "**OPTIONAL**" in this document
+are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}}
+when, and only when, they appear in all capitals, as shown here.
 
 # Purpose
 
@@ -184,7 +167,7 @@ NOTIFY (RFC 1996).
 Zone data published by the Registry System must contain a checksum in
 the form of ZONEMD (RFC 8976).
 
-# Local updates
+# Local Updates
 
 During normal operation, no changes to the zone data retrieved from
 the Registry may take place. However, there may be situations where
@@ -218,23 +201,11 @@ continue to be re-signed in the event of problems upstream. The exact
 checks to be carried out are set out in a separate specification and
 are subject to local policy.
 
-## Examples of ingress verification checks:
+## Requirements on ingress verification
 
-* Check that the zone data is complete.
-
-* Check that delegation information for the zone itself is correct.
-
-* Check that too much of the zone has not changed since the previous
-  publication - suggested alternative: Check that the churn rate (need
-  something better here) of the zone is within specified parameters.
-
-* Check that certain crucial records are present and correct (the zone’s SOA record is one example).
-
-The following requirements apply to the ingress verification function:
-
-* The ingress checks must prevent an updated incorrect zone from being
-  signed. An already approved zone must continue to be signed until a
-  new zone is approved.
+* The ingress verification must prevent an updated incorrect zone from
+  being signed. An already approved previous version of the zone must
+  continue to be signed until a new zone is approved.
 
 * New zone controls must be able to be added without the component for
   ingress verification of zone data needing to be redesigned
@@ -246,6 +217,18 @@ The following requirements apply to the ingress verification function:
 
 * All zone controls, self-developed or imported, must have local
   ownership within the organization.
+
+## Examples of ingress verification checks:
+
+* Check that the zone data is complete.
+
+* Check that delegation information for the zone itself is correct.
+
+* Check that the delta (i.e. the difference) between the current zone
+  and the previous version is within approved limits.
+
+* Check that certain crucial records are present and correct (the
+  zone’s SOA record is one example).
 
 # Signing
 
@@ -288,7 +271,8 @@ The following requirements apply to signing zone data:
 
 * Signing must be done with either NSEC or NSEC3 semantics.
 
-* If NSEC3 salt is used, the salt must be automatically periodically replaced.
+* If NSEC3 salt is used, the salt must be automatically periodically
+  replaced.
 
 * Change of DNSSEC signing semantics from NSEC to NSEC3 and vice versa
   must be possible automatically.
@@ -298,26 +282,30 @@ The following requirements apply to signing zone data:
   change on the zone.
 
 * The signing function shall recreate the ZONEMD RR per RFC 8976 after
-  the zone has been signed.  Egress Verification
+  the zone has been signed.
 
-After signing, it must be ensured that:
+# Egress Verification
 
-* All signatures are correctly issued and the necessary keys are
-  published in the zone, that the NSEC/NSEC3 chain is intact, and
+After signing, several checks must be performed on the zone contents.
+Apart from the obvious validation of generated DNSSEC signatures it is
+also important to ensure that the signing step only added DNSSEC-
+information without in any way modifying the unsigned data.
 
-* that the signed zone contains exactly the same unsigned data as the
-  unsigned zone. This check must be done by comparing the ZONEMD for
-  the unsigned zone with a ZONEMD calculated after signing. The
-  comparative ZONEMD record is calculated on the signed zone modulo
-  DNSSEC related records (DNSKEY, RRSIG. NSEC, NSEC3, NSEC3PARAM, CDS,
-  CDNSKEY).
+## Requirements on egress verification
 
-## Distribution
+* All generated DNSSEC signatures (RRSIG records) must be validated.
+
+* The NSEC (or NSEC3) chain must be verified to be complete.
+
+* The non-DNSSEC content of the signed zone must be provably identical
+  to the corresponding unsigned zone that entered the signing step.
+
+# Distribution
 
 The following requirements apply to distribution of the signed zone:
 
-* The signed zone must be retrieved from signing and egress verification
-  to the distribution points with AXFR (not IXFR).
+* The signed zone must be retrieved from signing and egress
+  verification to the distribution points with AXFR (not IXFR).
 
 * The signed zone shall be distributed to the designated authoritative
   name server services using AXFR/IXFR.
@@ -352,6 +340,43 @@ In a crisis situation, it must be possible to get a good overview of
 operating mode and system status locally, even if the monitoring
 during normal operation takes place centrally.
 
+# Resulting Design Consequences
+
+* The requirement on being able to prove that no unsigned data has
+  been modified during signing is most efficiently fullfilled by
+  computing the ZONEMD checksum on the unsigned data after signing
+  (i.e. the signed zone modulo the DNSSEC related records DNSKEY,
+  RRSIG. NSEC, NSEC3, NSEC3PARAM, CDS, and CDNSKEY) and comparing
+  that to the ZONEMD checksum for the corresponding unsigned zone.
+
+* The ZONEMD checksums need to be stored outside the zone pipeline,
+  indexed by the unsigned zone that each checksum corresponds to.
+
+* The signed zone may (and will) change the SOA Serial independently
+  of the unsigned zone. For this reason the ZONEMD checksums can not
+  be stored using the SOA Serial as the index. Therefore a separate,
+  unique, identifier is attached to each new version of the zone as a
+  TXT record. A UUID is used as the identifier.
+
+* Each unsigned zone MUST have a ZONEMD and a UUID index to store it
+  under. Therefore changes to the unsigned zone via the local update
+  facility must update the UUID in addition to any other change that
+  is executed.
+
+* The Registry runs multiple, parallel zone pipelines for the same
+  zone with the requirement to be able to switch which pipeline is
+  "active" at any time. As the local update facility is responsible
+  for updating the UUID if a local change is needed, the same UUID
+  will identify the exact same zone in all pipelines.
+
+* The requirement that the zone pipeline only consists of proven and
+  widely used software forces all local and custom software (including
+  various tests and verification modules) to be located outside the
+  zone pipeline. This cause a need for a component inside the zone
+  pipeline with the ability to call an external "verifier" for
+  verifications. At present only one such component is known (the
+  authoritative nameserver NSD with its "verify:" attribute), but we
+  hope that there will be more alternatives in the future.
 
 -------
 
