@@ -99,15 +99,13 @@ Internet community to ensure, at any given time, public access to
 correct versions of the DNS zones under their management. In order to
 meet this commitment, three components are essentially required:
 
-Generation of unsigned zones from the Registry System.
-
-Quality control and signing of the zones.
-
-Publication of resulting signed zones.
+* Generation of unsigned zones from the Registry System.
+* Quality control and signing of the zones.
+* Publication of resulting signed zones.
 
 The first step is handled by the Registry System. The third step is
 handled by a combination of external providers of authoritative DNS
-service and in-house DNS service. Both of these steps are out-of-scope
+handledservice and in-house DNS service. Both of these steps are out-of-scope
 for this document
 
 The sole purpose of this document is to provide a correct set of
@@ -116,15 +114,14 @@ Registry System and zone publication on the public Internet.
 
 # Terminology
 
-“Well lit”: software or other system that is successfully used in
-production, similar to our needs, in a large number of other places
-around the world.
+Well lit
+: Software or other system that is successfully used in production, similar to our needs, in a large number of other places around the world.
 
-"Upstream": Further up in the zone pipeline, i.e. in the direction of
-the Registry System.
+Upstream
+: Further up in the zone pipeline, i.e. in the direction of the Registry System.
 
-"Downstream": Further down the zone pipeline, i.e. towards the public
-Internet.
+Downstream
+: Further down the zone pipeline, i.e. towards the public Internet.
 
 # Basic Design Principles
 
@@ -159,13 +156,13 @@ standardized protocols. This requirement has the following
 consequences:
 
 Zone data must be retrieved from the Registry System using AXFR and
-IXFR (RFC 5936).
+IXFR {{!RFC5936}}.
 
 The request for publication of new zone data must be notified with DNS
-NOTIFY (RFC 1996).
+NOTIFY {{!RFC1995}}.
 
 Zone data published by the Registry System must contain a checksum in
-the form of ZONEMD (RFC 8976).
+the form of ZONEMD {{!RFC8976}}.
 
 # Local Updates
 
@@ -281,7 +278,7 @@ The following requirements apply to signing zone data:
   shall be reused when re-signing, in order to reduce the rate of
   change on the zone.
 
-* The signing function shall recreate the ZONEMD RR per RFC 8976 after
+* The signing function shall recreate the ZONEMD RR per {{!RFC8976}} after
   the zone has been signed.
 
 # Egress Verification
