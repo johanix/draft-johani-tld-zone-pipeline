@@ -263,13 +263,11 @@ The following requirements apply to signing zone data:
 
 * Signing must be done using key material via PKCS#11.
 
-* The signing function must support automatic switching of the signing
-  algorithm (e.g,. from RSA/SHA-256 to ECC/P-256/SHA-256).
+* The signing function must support algorithm rollover, e.g,. from RSA/SHA-256 to ECC/P-256/SHA-256.
 
 * Signing must be done with either NSEC or NSEC3 semantics.
 
-* If NSEC3 salt is used, the salt must be automatically periodically
-  replaced.
+* If NSEC3 salt is used, the salt must be periodically changed automatically.
 
 * Change of DNSSEC signing semantics from NSEC to NSEC3 and vice versa
   must be possible automatically.
@@ -310,7 +308,7 @@ The following requirements apply to distribution of the signed zone:
 * To reduce convergence time towards the public Internet, the signed
   zone must be distributed with IXFR as far as possible.
 
-NB Choice of zone publishing chain is an active configuration choice
+N.B. Choice of zone publishing chain is an active configuration choice
 in each distribution point and must always be the same for all
 distribution points.
 
@@ -343,7 +341,7 @@ during normal operation takes place centrally.
   been modified during signing is most efficiently fullfilled by
   computing the ZONEMD checksum on the unsigned data after signing
   (i.e. the signed zone modulo the DNSSEC related records DNSKEY,
-  RRSIG. NSEC, NSEC3, NSEC3PARAM, CDS, and CDNSKEY) and comparing
+  RRSIG. NSEC, NSEC3, NSEC3PARAM, apex CDS and CDNSKEY) and comparing
   that to the ZONEMD checksum for the corresponding unsigned zone.
 
 * The ZONEMD checksums need to be stored outside the zone pipeline,
