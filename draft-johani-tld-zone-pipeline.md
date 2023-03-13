@@ -157,7 +157,7 @@ at any stage through the zone pipeline.
   zone is the most important responsibility of the Registry. To ensure
   the ability to always maintain this ability the zone production must
   be self-contained.
-  
+
 
 # Interface to the Registry
 
@@ -318,15 +318,15 @@ The following requirements apply to distribution of the signed zone:
 * To reduce convergence time towards the public Internet, the signed
   zone must be distributed with IXFR as far as possible.
 
-* At least two complete zone publishing chains must be operational and  
+* At least two complete zone publishing chains must be operational and
   always active.
 
 * Choice of zone publishing chain is an active configuration choice
   in each distribution point and must always be the same for all
   distribution points.
 
-* The signed zone from the selected zone publishing chain must be 
- retrieved by all distribution points in all operating facilities. 
+* The signed zone from the selected zone publishing chain must be
+ retrieved by all distribution points in all operating facilities.
 
 
 # Resulting Design Consequences
