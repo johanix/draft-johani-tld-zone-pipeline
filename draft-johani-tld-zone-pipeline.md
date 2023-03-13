@@ -22,7 +22,7 @@ author:
  -
     ins: J. Schlyter
     name: Jakob Schlyter
-    org: Kirei
+    org: Kirei AB
     email: jakob@kirei.se
 
 normative:
