@@ -1,7 +1,7 @@
 ---
 title: "TLD Zone Pipeline: Requirements And Design Principles"
 abbrev: TLD Zone Pipeline Requirements
-docname: draft-johani-tld-zone-pipeline-latest
+docname: draft-johani-tld-zone-pipeline-00
 date: {DATE}
 category: std
 
