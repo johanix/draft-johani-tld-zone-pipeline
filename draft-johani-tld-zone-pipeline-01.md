@@ -1,7 +1,7 @@
 ---
 title: "TLD Zone Pipeline: Requirements And Design Principles"
 abbrev: TLD Zone Pipeline Requirements
-docname: draft-johani-tld-zone-pipeline-00
+docname: draft-johani-tld-zone-pipeline-01
 date: {DATE}
 category: std
 
@@ -39,12 +39,8 @@ The robustness and correctness of the zone pipeline is of crucial
 importance and the zone pipeline is one of the most critical parts of
 the operations of a TLD registry.
 
-After a serious incident in 2022, the .SE Registry decided to re-evaluate the
-requirements on the zone pipeline. This has led to several new design
-choices and a decision to create a more robust implementation from scratch.
-
 The goal of this document is to describe the requirements that the
-.SE Registry choose in preparation for the implementation of the new zone
+.SE Registry choose in preparation for the implementation of a new zone
 pipeline. The document also describes some of the design consequences that
 follow from the requirements. Hence this document is intended to work as a
 guide for understanding the actual implementation, which is planned to be
@@ -367,6 +363,21 @@ The following requirements apply to distribution of the signed zone:
   authoritative nameserver NSD with its "verify:" attribute), but we
   hope that there will be more alternatives in the future.
 
+# Security Considerations
+
+The correct generation and DNSSEC signing of a TLD zone is a matter of
+significant importance. As such requirements and methods for
+verification of correctness is an important matter that has previously
+not been much publically discussed.
+
+As a requirements specification this document aims to make this topic
+more public and visible with the intent of improving the correctness
+of the requirements via public review.
+
+# IANA Considerations
+
+None
+
 -------
 
 # Acknowledgements
@@ -377,6 +388,11 @@ The following requirements apply to distribution of the signed zone:
 
 # Change History (to be removed before publication)
 
-* draft-johani-tld-zone-pipeline-00
+* draft-johani-tld-zone-pipeline-00 
 
-> Initial public draft.
+> Initial public draft. 
+
+* draft-johani-tld-zone-pipeline-01
+
+> Security and IANA Considerations sections added.
+> Minor typos fixed. 
