@@ -1,7 +1,7 @@
 ---
 title: "TLD Zone Pipeline: Requirements And Design Principles"
 abbrev: TLD Zone Pipeline Requirements
-docname: draft-johani-tld-zone-pipeline-01
+docname: draft-johani-tld-zone-pipeline-02
 date: {DATE}
 category: std
 
@@ -394,7 +394,12 @@ None
 
 # Acknowledgements
 
+We appreciate suggestions and helpful comments from a number of
+people, including but not limited to:
 
+* Stefan Ubbingk, SIDN
+
+* Calvin Browne, DNS Pty, Ltd.
 
 --- back
 
@@ -408,3 +413,10 @@ None
 
 > Security and IANA Considerations sections added.
 > Minor typos fixed. 
+
+* draft-johani-tld-zone-pipeline-02
+
+> Several typos fixed. 
+> Further clarifications and explanations.
+
+
